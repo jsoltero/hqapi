@@ -37,12 +37,13 @@ import org.hyperic.hq.hqapi1.types.Metric;
 import org.hyperic.hq.hqapi1.types.MetricsResponse;
 import org.hyperic.hq.hqapi1.types.ResourceResponse;
 import org.hyperic.hq.hqapi1.types.StatusResponse;
+import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-
-public class MetricCommand extends Command {
+@Component
+public class MetricCommand extends AbstractCommand {
 
     private static String CMD_LIST = "list";
     private static String CMD_SYNC = "sync";
@@ -55,11 +56,15 @@ public class MetricCommand extends Command {
     private void printUsage() {
         System.err.println("One of " + Arrays.toString(COMMANDS) + " required");
     }
+    
+    public String getName() {
+        return "metric";
+     }
 
-    protected void handleCommand(String[] args) throws Exception {
+    public int handleCommand(String[] args) throws Exception {
         if (args.length == 0) {
             printUsage();
-            System.exit(-1);
+            return 1;
         }
 
         if (args[0].equals(CMD_LIST)) {
@@ -68,8 +73,9 @@ public class MetricCommand extends Command {
             sync(trim(args));
         } else {
             printUsage();
-            System.exit(-1);
+            return 1;
         }
+        return 0;
     }
 
     private void list(String[] args) throws Exception {
