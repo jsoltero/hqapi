@@ -276,4 +276,20 @@ class HQConnection {
             method.releaseConnection();
         }
     }
+
+    /**
+     * Get the user of this connection
+     * @return username
+     */
+    public String getUser() {
+        return _user;
+    }
+
+    /**
+     * Get the host of this connection
+     * @return hostname
+     */
+    public String getHost() {
+        return _host;
+    }
 }

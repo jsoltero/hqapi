@@ -27,12 +27,16 @@
 
 package org.hyperic.hq.hqapi1;
 
+import java.io.IOException;
+
 /**
  * The Hyperic HQ API.
  *
  * This is the main entry point into the HQ Api.
  */
 public class HQApi {
+    
+    private final HQConnection       _connection;
 
     private final UserApi            _userApi;
     private final RoleApi            _roleApi;
@@ -61,25 +65,25 @@ public class HQApi {
      */
     public HQApi(String host, int port, boolean isSecure, String user,
                  String password) {
-        HQConnection connection = new HQConnection(host, port, isSecure,
+        _connection = new HQConnection(host, port, isSecure,
                                                    user, password);
-        _userApi          = new UserApi(connection);
-        _roleApi          = new RoleApi(connection);
-        _groupApi         = new GroupApi(connection);
-        _metricApi        = new MetricApi(connection);
-        _escalationApi    = new EscalationApi(connection);
-        _autodiscoveryApi = new AutodiscoveryApi(connection);
-        _resourceApi      = new ResourceApi(connection);
-        _agentApi         = new AgentApi(connection);
-        _alertDefinitionApi = new AlertDefinitionApi(connection);
-        _maintenanceApi   = new MaintenanceApi(connection);
-        _resourceEdgeApi  = new ResourceEdgeApi(connection);
-        _serverConfigApi  = new ServerConfigApi(connection);
-        _alertApi         = new AlertApi(connection);
-        _metricDataApi    = new MetricDataApi(connection);
-        _eventApi         = new EventApi(connection);
-        _controlApi       = new ControlApi(connection);
-        _applApi          = new ApplicationApi(connection);
+        _userApi          = new UserApi(_connection);
+        _roleApi          = new RoleApi(_connection);
+        _groupApi         = new GroupApi(_connection);
+        _metricApi        = new MetricApi(_connection);
+        _escalationApi    = new EscalationApi(_connection);
+        _autodiscoveryApi = new AutodiscoveryApi(_connection);
+        _resourceApi      = new ResourceApi(_connection);
+        _agentApi         = new AgentApi(_connection);
+        _alertDefinitionApi = new AlertDefinitionApi(_connection);
+        _maintenanceApi   = new MaintenanceApi(_connection);
+        _resourceEdgeApi  = new ResourceEdgeApi(_connection);
+        _serverConfigApi  = new ServerConfigApi(_connection);
+        _alertApi         = new AlertApi(_connection);
+        _metricDataApi    = new MetricDataApi(_connection);
+        _eventApi         = new EventApi(_connection);
+        _controlApi       = new ControlApi(_connection);
+        _applApi          = new ApplicationApi(_connection);
     }
 
     /**
@@ -192,7 +196,6 @@ public class HQApi {
     }
 
     /**
-<<<<<<< HEAD
      * Manipulate HQ server configuration settings
      *
      * @return The API for modifying HQ server settings
@@ -235,5 +238,30 @@ public class HQApi {
      */
     public ApplicationApi getApplicationApi() {
         return _applApi;
+    }
+
+    /**
+     * Get the hostname of this API object
+     * @return the hostname of this API instance
+     */
+    public String getHost() {
+        return _connection.getHost();
+    }
+
+    /**
+     * Test that the HQConnection is valid 
+     * @return true if this API instance is connected
+     * to a valid HQApi host
+     */
+    public boolean testConnection() {
+        boolean connected = false;
+        try {
+            // test by looking up the user who connected
+            _userApi.getUser(_connection.getUser());
+            connected = true;
+        } catch (IOException e) {
+            // Log?
+        }
+        return connected;        
     }
 }
